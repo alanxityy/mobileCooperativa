@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load format_brl %}
+{% block title %}Detalhe do lançamento{% endblock %}
+{% block content %}
+<h1>Detalhe</h1>
+<ul>
+  <li><strong>Data:</strong> {{ obj.data|date:"d/m/Y" }}</li>
+  <li><strong>Tipo:</strong> {{ obj.get_tipo_display }}</li>
+  <li><strong>Categoria:</strong> {{ obj.get_categoria_display }}</li>
+  <li><strong>Valor:</strong> {{ obj.valor|brl }}</li>
+  <li><strong>Quantidade (kg):</strong> {{ obj.quantidade_kg|default:"—" }}</li>
+  <li><strong>Coletor:</strong> {{ obj.coletor|default:"—" }}</li>
+  <li><strong>Material:</strong> {{ obj.material|default:"—" }}</li>
+  <li><strong>Descrição:</strong> {{ obj.descricao|default:"—" }}</li>
+  <li><strong>Criado em:</strong> {{ obj.criado_em|date:"d/m/Y H:i" }}</li>
+</ul>
+<p>
+  <a href="{% url 'caixa:update' obj.pk %}">Editar</a> ·
+  <a href="{% url 'caixa:list' %}">Voltar</a>
+</p>
+{% endblock %}

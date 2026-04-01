@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}Lançamento de Caixa{% endblock %}
+
+{% block content %}
+<h1>{{ view.object|default:"Novo lançamento" }}</h1>
+
+<form method="post" style="max-width:560px;">
+  {% csrf_token %}
+  {{ form.as_p }}
+
+  <!-- Dica dinâmica de preço/kg e cálculo -->
+  <div id="hint-preco" style="font-size:.9em;color:#555;margin:-6px 0 10px;"></div>
+
+  <button type="submit" style="background:#0033a0;color:#fff;padding:8px 12px;border:none;border-radius:6px;">Salvar</button>
+  <a href="{% url 'caixa:list' %}" style="margin-left:8px;">Cancelar</a>
+</form>
+
+<script>
+(function(){
+  const $tipo = document.getElementById("id_tipo");
+  const $cat  = document.getElementById("id_categoria");
+  const $mat  = document.getElementById("id_material");
+  const $qtd  = document.getElementById("id_quantidade_kg");
+  const $val  = document.getElementById("id_valor");
+  const $hint = document.getElementById("hint-preco") || (function(){
+    const d = document.createElement('div');
+    d.id = "hint-preco";
+    d.style.cssText = "font-size:.9em;color:#555;margin:-6px 0 10px;";
+    $val && $val.closest("form").insertBefore(d, $val.closest("p")?.nextSibling || null);
+    return d;
+  })();
+
+  if (!$mat || !$qtd || !$val) return;
+
+  // ----- conversão pt-BR segura -----
+  function toNumber(x){
+    if (x == null) return 0;
+    let s = String(x).trim().replace(/\s+/g, '');
+    if (s.includes('.') && s.includes(',')) s = s.replace(/\./g, '').replace(',', '.');
+    else if (s.includes(',')) s = s.replace(',', '.');
+    const n = Number(s);
+    return Number.isFinite(n) ? n : 0;
+  }
+  function money(n){ return (Math.round(n * 100) / 100).toFixed(2); }
+
+  function ctxAuto(){
+    return ($tipo?.value === "E") && ($cat?.value === "arrecadacao");
+  }
+
+  let precoKgCache = {};
+  let precoKgAtual = null;
+  let auto = true; // ligado por padrão; desliga se usuário editar "valor" manualmente
+
+  $val.addEventListener("input", () => { auto = false; });
+
+  async function carregarPreco(materialId){
+    precoKgAtual = null;
+    if (!materialId) { atualizarHint(0); return; }
+    if (precoKgCache[materialId] != null){
+      precoKgAtual = toNumber(precoKgCache[materialId]);
+      atualizarHint(toNumber($qtd.value));
+      return;
+    }
+    try{
+      const url = "{% url 'materiais:preco' 0 %}".replace("/0/", "/" + materialId + "/");
+      const resp = await fetch(url);
+      const data = await resp.json();
+      precoKgCache[materialId] = data.preco_kg;
+      precoKgAtual = toNumber(data.preco_kg);
+    }catch(e){
+      precoKgAtual = null;
+      console.warn("Falha ao obter preço:", e);
+    }
+    atualizarHint(toNumber($qtd.value));
+  }
+
+  function atualizarHint(qtd){
+    if (precoKgAtual){
+      const calc = precoKgAtual * (qtd || 0);
+      $hint.textContent = "Preço por kg: R$ " + money(precoKgAtual) +
+                          (ctxAuto() ? " • Qtd: " + (qtd||0).toFixed(3) + " kg → Valor sugerido: R$ " + money(calc) : "");
+    } else {
+      $hint.textContent = "";
+    }
+  }
+
+  function recomputar(){
+    const qtd = toNumber($qtd.value);
+    atualizarHint(qtd);
+    if (!ctxAuto() || !precoKgAtual) return;
+    const total = precoKgAtual * (qtd || 0);
+    if (auto) { $val.value = money(total); } // agora recalcula SEM depender de "valor vazio"
+  }
+
+  // eventos
+  $mat.addEventListener("change", async () => { auto = true; await carregarPreco($mat.value); recomputar(); });
+  $qtd.addEventListener("input", () => { recomputar(); });
+  $tipo && $tipo.addEventListener("change", () => { auto = true; recomputar(); });
+  $cat  && $cat.addEventListener("change", () => { auto = true; recomputar(); });
+
+  // inicialização (edição)
+  if ($mat.value) carregarPreco($mat.value).then(recomputar);
+})();
+</script>
+{% endblock %}

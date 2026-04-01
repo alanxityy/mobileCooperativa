@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load format_brl %}
+{% block title %}{{ obj.nome }}{% endblock %}
+
+{% block content %}
+<h1>{{ obj.nome }}</h1>
+<ul>
+  <li><strong>Preço/kg:</strong> {{ obj.preco_kg|brl }}</li>
+  <li><strong>Status:</strong> {% if obj.ativo %}Ativo{% else %}Inativo{% endif %}</li>
+  <li><strong>Criado em:</strong> {{ obj.criado_em|date:"d/m/Y H:i" }}</li>
+</ul>
+<p>
+  {% if user.profile.cargo == 'admin' or user.profile.cargo == 'gestor' %}
+  <a href="{% url 'materiais:update' obj.pk %}">Editar</a> ·
+  {% endif %}
+  <a href="{% url 'materiais:list' %}">Voltar</a>
+</p>
+{% endblock %}

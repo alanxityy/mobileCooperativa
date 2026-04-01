@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Excluir coletor{% endblock %}
+{% block content %}
+{% if user.profile.cargo == 'admin' or user.profile.cargo == 'gestor' %}
+<h1>Excluir coletor</h1>
+<p>Tem certeza que deseja excluir <strong>{{ object }}</strong>?</p>
+<form method="post">
+  {% csrf_token %}
+  <button type="submit" style="background:#b00000;color:#fff;padding:8px 12px;border:none;border-radius:6px;">Confirmar</button>
+  <a href="{% url 'coletores:list' %}" style="margin-left:8px;">Cancelar</a>
+</form>
+{% endif %}
+{% endblock %}

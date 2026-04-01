@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load format_brl %}
+
+{% block title %}Lançamentos de Caixa{% endblock %}
+{% block content %}
+<h1>Lançamentos de Caixa</h1>
+
+<p>
+  <a href="{% url 'caixa:create' %}" style="background:#006b3f;color:#fff;padding:8px 12px;border-radius:6px;text-decoration:none;">
+    + Novo lançamento
+  </a>
+</p>
+
+<form method="get" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin:12px 0 18px;">
+  <input type="text" name="q" placeholder="Buscar descrição…" value="{{ request.GET.q|default:'' }}">
+  <select name="tipo">
+    <option value="">Tipo (todos)</option>
+    {% for code,label in TIPOS %}
+      <option value="{{ code }}" {% if request.GET.tipo == code %}selected{% endif %}>{{ label }}</option>
+    {% endfor %}
+  </select>
+  <select name="categoria">
+    <option value="">Categoria (todas)</option>
+    {% for key,label in CATEGORIAS.items %}
+      <option value="{{ key }}" {% if request.GET.categoria == key %}selected{% endif %}>{{ label }}</option>
+    {% endfor %}
+  </select>
+  <input type="date" name="de" value="{{ request.GET.de|default:'' }}" title="De">
+  <input type="date" name="ate" value="{{ request.GET.ate|default:'' }}" title="Até">
+  <input type="number" name="coletor" value="{{ request.GET.coletor|default:'' }}" placeholder="ID Coletor">
+  <input type="number" name="material" value="{{ request.GET.material|default:'' }}" placeholder="ID Material">
+  <button type="submit" style="padding:8px 10px;">Filtrar</button>
+  <a href="." style="padding:8px 10px;text-decoration:none;border:1px solid #ddd;border-radius:6px;text-align:center;">Limpar</a>
+</form>
+
+<div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:10px;">
+  {% if user.profile.cargo == 'admin' or user.profile.cargo == 'gestor' %}
+  <div style="background:#f3fbf7;padding:10px 14px;border-radius:8px;">Entradas: <strong>{{ total_entradas|brl }}</strong></div>
+  <div style="background:#fff7f2;padding:10px 14px;border-radius:8px;">Saídas: <strong>{{ total_saidas|brl }}</strong></div>
+  <div style="background:#fffdf0;padding:10px 14px;border-radius:8px;">Saldo: <strong>{{ saldo|brl }}</strong></div>
+  {% endif %}
+</div>
+
+{% if lancamentos %}
+  <table style="width:100%;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden;">
+    <thead style="background:#f5f5f5;">
+      <tr>
+        <th style="text-align:left;padding:10px;border-bottom:1px solid #e9e9e9;">Data</th>
+        <th style="text-align:left;padding:10px;border-bottom:1px solid #e9e9e9;">Tipo</th>
+        <th style="text-align:left;padding:10px;border-bottom:1px solid #e9e9e9;">Categoria</th>
+        <th style="text-align:left;padding:10px;border-bottom:1px solid #e9e9e9;">Valor</th>
+        <th style="text-align:left;padding:10px;border-bottom:1px solid #e9e9e9;">Qtd (kg)</th>
+        <th style="text-align:left;padding:10px;border-bottom:1px solid #e9e9e9;">Coletor</th>
+        <th style="text-align:left;padding:10px;border-bottom:1px solid #e9e9e9;">Material</th>
+        <th style="text-align:left;padding:10px;border-bottom:1px solid #e9e9e9;">Descrição</th>
+        <th style="padding:10px;border-bottom:1px solid #e9e9e9;">Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in lancamentos %}
+        <tr>
+          <td style="padding:10px;">{{ item.data|date:"d/m/Y" }}</td>
+          <td style="padding:10px;">{{ item.get_tipo_display }}</td>
+          <td style="padding:10px;">{{ item.get_categoria_display }}</td>
+          <td style="padding:10px;{% if item.tipo == 'E' %}color:#0b8a62{% else %}color:#b00000{% endif %}">
+            {% if item.tipo == 'E' %}+{% else %}-{% endif %} {{ item.valor|brl }}
+          </td>
+           <td style="padding:10px;">{{ item.quantidade_kg|default:"—" }}</td> <!-- NOVO -->
+          <td style="padding:10px;">{{ item.coletor|default:"—" }}</td>
+          <td style="padding:10px;">{{ item.material|default:"—" }}</td>
+          <td style="padding:10px;">{{ item.descricao|default:"—" }}</td>
+          <td style="padding:10px;white-space:nowrap;">
+    <a href="{% url 'caixa:detail' item.pk %}">ver</a> |
+    {% if user.profile.cargo == 'admin' or user.profile.cargo == 'gestor' %}
+    <a href="{% url 'caixa:update' item.pk %}">editar</a>
+        | <a href="{% url 'caixa:delete' item.pk %}">excluir</a>
+{% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% if is_paginated %}
+    <div style="margin-top:10px;">
+      {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}">&laquo; Anterior</a>{% endif %}
+      <span style="margin:0 8px;">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+      {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}">Próxima &raquo;</a>{% endif %}
+    </div>
+  {% endif %}
+{% else %}
+  <p>Nenhum lançamento encontrado.</p>
+{% endif %}
+{% endblock %}

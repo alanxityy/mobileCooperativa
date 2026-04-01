@@ -1,0 +1,115 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>{% block title %}Cooperativa{% endblock %}</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather&display=swap" rel="stylesheet">
+
+  <style>
+    /* ======== BASE ======== */
+    body {
+      font-family: 'Merriweather', sans-serif;
+      color: #333;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+    }
+
+    /* ======== BANNER SUPERIOR ======== */
+    .banner-superior {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #0033a0; /* Azul da bandeira */
+      padding: 10px 30px;
+      border-bottom: 4px solid #ffcc00; /* Detalhe em amarelo */
+    }
+    .banner-superior div { flex: 1; display: flex; align-items: center; justify-content: center; }
+    .logo-esquerda { justify-content: flex-start; }
+    .logo-centro   { justify-content: center; }
+    .logo-direita  { justify-content: flex-end; }
+    .banner-superior img { height: 90px; object-fit: contain; }
+
+    /* ======== NAV ======== */
+    header { background-color: #0033a0; color: white; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
+    nav { display: flex; justify-content: center; align-items: center; padding: 0 8px; }
+    nav ul.menu-principal {
+      display: flex; flex-wrap: wrap; justify-content: center;
+      gap: 8px 16px; margin: 0 auto; padding: 0; max-width: 1200px; width: 100%; list-style: none;
+    }
+    nav ul.menu-principal li { margin: 0; list-style: none; display: flex; align-items: center; }
+    nav ul.menu-principal li a {
+      display: block; color: #fff; text-decoration: none; font-size: 16px;
+      padding: 12px 18px; border-radius: 4px; transition: all 0.3s ease; background-color: #0033a0;
+    }
+    nav ul.menu-principal li a:hover { background-color: #ffcc00; color: #0033a0; }
+    /* garante que o botão submit do form apareça alinhado como os links */
+    nav ul.menu-principal li form { margin: 0; }
+    nav ul.menu-principal li form .nav-logout {
+      background-color: #0033a0; border: none; color: white;
+      padding: 12px 18px; font-size: 16px; cursor: pointer; border-radius: 4px; transition: all 0.3s ease;
+    }
+    nav ul.menu-principal li form .nav-logout:hover { background-color: #ffcc00; color: #0033a0; }
+    /* espaçador para empurrar os itens de auth p/ a direita */
+    .push-right { flex: 1 1 auto; }
+
+    /* ======== RESPONSIVO ======== */
+    @media (max-width: 900px) {
+      nav ul.menu-principal li a, nav ul.menu-principal li form .nav-logout { font-size: 14px; padding: 10px 12px; }
+      nav ul.menu-principal { gap: 6px 12px; }
+    }
+    @media (max-width: 600px) {
+      nav ul.menu-principal li { flex: 1 1 calc(50% - 12px); }
+      nav ul.menu-principal li a, nav ul.menu-principal li form .nav-logout { text-align: center; width: 100%; }
+      .push-right { flex-basis: 100%; height: 0; }
+    }
+    @media (max-width: 420px) { nav ul.menu-principal li { flex: 1 1 100%; } }
+
+    /* ======== MAIN ======== */
+    main { padding: 20px; background-color: #fff; border-radius: 10px; margin: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+
+    /* ======== FOOTER ======== */
+    footer { background-color: #0033a0; color: white; padding: 20px; text-align: center; font-size: 14px; margin-top: 30px; }
+  </style>
+</head>
+<body>
+
+  <div class="banner-superior">
+    <div class="logo-centro">
+      <img src="{% static 'img/logo_suzanapolis.png' %}" alt="Logo CTR">
+    </div>
+  </div>
+
+  <header>
+    <nav>
+      <ul class="menu-principal">
+       {% if request.user.is_authenticated %} 
+       <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+       <li><a href="/materiais/">Materiais</a></li>
+       <li><a href="/caixa/">Caixa</a></li>
+
+       <li class="push-right"></li>
+
+       
+         <li><a style="pointer-events:none;opacity:.9">Olá, {{ request.user.get_username }}</a></li>
+         <li><a href="{% url 'logout' %}" class="nav-logout">Sair</a></li>
+     
+        {% endif %}
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer>
+    <p>&copy; Prefeitura Municipal de Suzanápolis/SP — Cooperativa de Reciclagem</p>
+  </footer>
+
+</body>
+</html>

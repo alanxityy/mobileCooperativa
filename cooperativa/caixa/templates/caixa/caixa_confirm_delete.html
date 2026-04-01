@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load format_brl %}
+
+{% block title %}Excluir lançamento{% endblock %}
+
+{% block content %}
+  {% if user.profile.cargo == 'admin' or user.profile.cargo == 'gestor' %}
+    
+    <h1>Excluir lançamento</h1>
+    
+    <p style="background:#fff4f4;border:1px solid #f5c2c7;color:#b02a37;padding:10px;border-radius:8px;">
+      Tem certeza de que deseja excluir este lançamento? <strong>Esta ação não pode ser desfeita.</strong>
+    </p>
+
+    <ul style="margin:12px 0 18px;">
+      <li><strong>Data:</strong> {{ object.data|date:"d/m/Y" }}</li>
+      <li><strong>Tipo:</strong> {{ object.get_tipo_display }}</li>
+      <li><strong>Categoria:</strong> {{ object.get_categoria_display }}</li>
+      <li><strong>Valor:</strong> {{ object.valor|brl }}</li>
+      <li><strong>Quantidade (kg):</strong> {{ object.quantidade_kg|default:"—" }}</li>
+      
+      <li><strong>Coletor:</strong> 
+        {% if object.coletor %}
+          {{ object.coletor.nome }} ({{ object.coletor.documento_mascarado }})
+        {% else %}
+          —
+        {% endif %}
+      </li>
+      
+      <li><strong>Material:</strong> {{ object.material|default:"—" }}</li>
+      <li><strong>Descrição:</strong> {{ object.descricao|default:"—" }}</li>
+    </ul>
+
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" style="background:#b00000;color:#fff;padding:8px 12px;border:none;border-radius:6px;">
+        Excluir
+      </button>
+      <a href="{% url 'caixa:detail' object.pk %}" style="margin-left:8px;">Cancelar</a>
+    </form>
+
+  {% else %}
+    <p>Você não tem permissão para realizar esta operação.</p>
+  {% endif %}
+
+{% endblock %}

@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Materiais Recicláveis{% endblock %}
+
+{% block content %}
+<h1 style="text-align:center;letter-spacing:.06em;">MATERIAIS RECICLÁVEIS</h1>
+<p style="text-align:center;opacity:.8;margin-top:6px;">Conheça mais sobre a história e as propriedades de cada material</p>
+<hr style="margin:18px 0 28px;opacity:.25;">
+
+<!-- ÍCONES / ATALHOS -->
+<div class="grid-icons" style="display:flex;flex-wrap:wrap;gap:28px;justify-content:center;">
+  <!-- Cada bloco tem data-target = id da seção -->
+  <button class="mat-icon" data-target="papel" aria-controls="sec-papel" aria-expanded="false" style="background:none;border:none;cursor:pointer;text-align:center;width:150px;">
+    <img src="{% static 'img/reciclagem_papel.png' %}" alt="Papel" style="height:64px;">
+    <div style="margin-top:8px;font-weight:700;color:#2b65c8;">PAPEL</div>
+  </button>
+
+  <button class="mat-icon" data-target="plastico" aria-controls="sec-plastico" aria-expanded="false" style="background:none;border:none;cursor:pointer;text-align:center;width:150px;">
+    <img src="{% static 'img/reciclagem_plastico.png' %}" alt="Plástico" style="height:64px;">
+    <div style="margin-top:8px;font-weight:700;color:#f06421;">PLÁSTICO</div>
+  </button>
+
+  <button class="mat-icon" data-target="vidro" aria-controls="sec-vidro" aria-expanded="false" style="background:none;border:none;cursor:pointer;text-align:center;width:150px;">
+    <img src="{% static 'img/reciclagem_vidro.png' %}" alt="Vidro" style="height:64px;">
+    <div style="margin-top:8px;font-weight:700;color:#0b8a62;">VIDRO</div>
+  </button>
+
+  <button class="mat-icon" data-target="organicos" aria-controls="sec-organicos" aria-expanded="false" style="background:none;border:none;cursor:pointer;text-align:center;width:150px;">
+    <img src="{% static 'img/reciclagem_organico.png' %}" alt="Orgânicos" style="height:64px;">
+    <div style="margin-top:8px;font-weight:700;color:#ea7a1a;">ORGÂNICOS</div>
+  </button>
+
+  <button class="mat-icon" data-target="metal" aria-controls="sec-metal" aria-expanded="false" style="background:none;border:none;cursor:pointer;text-align:center;width:150px;">
+    <img src="{% static 'img/reciclagem_metal.png' %}" alt="Metal" style="height:64px;">
+    <div style="margin-top:8px;font-weight:700;color:#ffcc00;">METAL</div>
+  </button>
+
+  <button class="mat-icon" data-target="outros" aria-controls="sec-outros" aria-expanded="false" style="background:none;border:none;cursor:pointer;text-align:center;width:150px;">
+    <img src="{% static 'img/reciclagem_outros.png' %}" alt="Outros" style="height:64px;opacity:.5;">
+    <div style="margin-top:8px;font-weight:700;color:#8a939d;">OUTROS</div>
+  </button>
+</div>
+
+<!-- SEÇÕES DE CONTEÚDO (iniciam ocultas) -->
+<div style="margin-top:28px;display:grid;gap:16px;">
+  <!-- PAPEL -->
+  <section id="sec-papel" data-section="papel" hidden
+           style="background:#f8fafc;border-radius:10px;padding:16px;box-shadow:0 1px 5px rgba(0,0,0,.05);">
+    <h2 style="margin:0 0 8px;">Papel</h2>
+    <p>Originado na China antiga, o papel se espalhou pelo mundo e segue essencial. A reciclagem reaproveita fibras de celulose, economizando água, energia e árvores.</p>
+    <ul style="margin-left:18px;">
+      <li><strong>Reciclar:</strong> jornais, caixas, folhas, papelão limpo.</li>
+      <li><strong>Evitar:</strong> engordurados, plastificados/metalizados e sanitários.</li>
+    </ul>
+  </section>
+
+  <!-- PLÁSTICO -->
+  <section id="sec-plastico" data-section="plastico" hidden
+           style="background:#fff7f2;border-radius:10px;padding:16px;box-shadow:0 1px 5px rgba(0,0,0,.05);">
+    <h2 style="margin:0 0 8px;">Plástico</h2>
+    <p>Polímeros surgidos no século XX trouxeram leveza e versatilidade. A reciclagem depende da separação por tipo (PET, PEAD, PP...).</p>
+    <ul style="margin-left:18px;">
+      <li><strong>Reciclar:</strong> garrafas PET, frascos de limpeza, tampas e sacolas limpas.</li>
+      <li><strong>Cuidados:</strong> enxágue para evitar contaminação.</li>
+    </ul>
+  </section>
+
+  <!-- VIDRO -->
+  <section id="sec-vidro" data-section="vidro" hidden
+           style="background:#f3fbf7;border-radius:10px;padding:16px;box-shadow:0 1px 5px rgba(0,0,0,.05);">
+    <h2 style="margin:0 0 8px;">Vidro</h2>
+    <p>Feito da fusão de areia, barrilha e calcário, o vidro é infinitamente reciclável sem perder qualidade.</p>
+    <ul style="margin-left:18px;">
+      <li><strong>Reciclar:</strong> garrafas e potes limpos, sem tampa.</li>
+      <li><strong>Segurança:</strong> embale estilhaços para evitar acidentes.</li>
+    </ul>
+  </section>
+
+  <!-- ORGÂNICOS -->
+  <section id="sec-organicos" data-section="organicos" hidden
+           style="background:#fff8ef;border-radius:10px;padding:16px;box-shadow:0 1px 5px rgba(0,0,0,.05);">
+    <h2 style="margin:0 0 8px;">Orgânicos</h2>
+    <p>Restos de alimentos e resíduos verdes viram composto, reduzindo envio a aterros e retornando nutrientes ao solo.</p>
+    <ul style="margin-left:18px;">
+      <li><strong>Compostagem:</strong> use restos vegetais; evite carnes/óleos em composteiras simples.</li>
+    </ul>
+  </section>
+
+  <!-- METAL -->
+  <section id="sec-metal" data-section="metal" hidden
+           style="background:#fffdf0;border-radius:10px;padding:16px;box-shadow:0 1px 5px rgba(0,0,0,.05);">
+    <h2 style="margin:0 0 8px;">Metal</h2>
+    <p>Alumínio e aço possuem cadeia forte de reciclagem. A sucata fundida economiza muita energia e mineração.</p>
+    <ul style="margin-left:18px;">
+      <li><strong>Reciclar:</strong> latas de bebidas/alimentos, tampas e sucatas limpas.</li>
+      <li><strong>Dica:</strong> esvazie e enxágue as latas.</li>
+    </ul>
+  </section>
+
+  <!-- OUTROS -->
+  <section id="sec-outros" data-section="outros" hidden
+           style="background:#f6f7f9;border-radius:10px;padding:16px;box-shadow:0 1px 5px rgba(0,0,0,.05);">
+    <h2 style="margin:0 0 8px;">Outros</h2>
+    <p>Materiais como têxteis, eletroeletrônicos e perigosos (pilhas, lâmpadas) exigem destinação específica em pontos de coleta.</p>
+  </section>
+</div>
+
+<script>
+  // Mostra/oculta a seção correspondente ao ícone clicado
+  (function() {
+    const buttons = document.querySelectorAll('.mat-icon');
+    const sections = document.querySelectorAll('[data-section]');
+    function openSection(key) {
+      sections.forEach(sec => {
+        const isTarget = sec.dataset.section === key;
+        sec.hidden = !isTarget;
+      });
+      buttons.forEach(btn => {
+        const expanded = btn.dataset.target === key;
+        btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+      });
+      // rola suave até a seção aberta
+      const target = document.querySelector('#sec-' + key);
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => openSection(btn.dataset.target));
+    });
+    // abre nada por padrão; se quiser abrir "papel" ao carregar, descomente:
+    // openSection('papel');
+  })();
+</script>
+{% endblock %}

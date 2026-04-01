@@ -1,0 +1,44 @@
+/* Paleta Cooperativa */
+:root{
+  --brand: #006b3f;    /* verde */
+  --brand-dark: #005331;
+  --accent: #0033a0;   /* azul */
+  --warn: #ffcc00;     /* amarelo */
+}
+
+/* Navbar / topo */
+.main-header.navbar {
+  background: var(--brand) !important;
+}
+.brand-link {
+  background: var(--brand) !important;
+}
+.brand-link .brand-image {
+  box-shadow: none !important;
+}
+
+/* Links principais */
+a, .text-primary {
+  color: var(--accent) !important;
+}
+.btn-primary, .bg-primary, .callout.callout-info {
+  background-color: var(--brand) !important;
+  border-color: var(--brand-dark) !important;
+}
+.btn-primary:hover {
+  background-color: var(--brand-dark) !important;
+}
+
+/* Sidebar */
+.main-sidebar {
+  background: #0b3f2a !important;
+}
+.nav-sidebar .nav-link.active {
+  background: rgba(255,255,255,.1) !important;
+  border-radius: 8px;
+}
+
+/* Tabelas e cartões */
+.card { border-radius: 12px; }
+.card-header { background:#f5f6f8; border-bottom-color:#e5e7eb; }
+.table thead th { background:#f5f6f8; }

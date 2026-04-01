@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Excluir material{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 20px;">
+
+    {% if user.profile.cargo == 'admin' or user.profile.cargo == 'gestor' %}
+        {# --- CONTEÚDO PARA ADMIN E GESTOR --- #}
+        <h1>Excluir material</h1>
+        <p style="font-size: 1.1rem;">Tem certeza que deseja excluir <strong>{{ object }}</strong>?</p>
+        
+        <form method="post" style="margin-top: 20px;">
+            {% csrf_token %}
+            <button type="submit" style="background:#b00000; color:#fff; padding:8px 12px; border:none; border-radius:6px; cursor: pointer;">
+                Confirmar Exclusão
+            </button>
+            <a href="{% url 'materiais:list' %}" style="margin-left:8px; text-decoration: none; color: #666;">Cancelar</a>
+        </form>
+
+    {% else %}
+        {# --- CONTEÚDO PARA OPERACIONAL --- #}
+        <div style="background: #fff5f5; padding: 30px; border-radius: 8px; border: 1px solid #feb2b2; text-align: center;">
+            <h2 style="color: #c53030;">Acesso Negado</h2>
+            <p>Seu cargo (Operacional) não possui permissão para excluir materiais.</p>
+            <a href="{% url 'materiais:list' %}" style="color: #2b6cb0;">Voltar para a lista</a>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

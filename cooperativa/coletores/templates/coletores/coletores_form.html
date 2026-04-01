@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}{{ view.object|default:"Novo coletor" }}{% endblock %}
+
+{% block content %}
+{% if user.profile.cargo == 'admin' or user.profile.cargo == 'gestor' %}
+
+<h1>{{ view.object|default:"Novo coletor" }}</h1>
+
+<form method="post" enctype="multipart/form-data" style="max-width:720px;">
+  {% csrf_token %}
+  
+  <fieldset style="border:1px solid #eee;border-radius:8px;padding:12px 14px;margin-bottom:14px;">
+    <legend>Dados pessoais</legend>
+    {{ form.nome.errors }} 
+    <p>{{ form.nome.label_tag }} {{ form.nome }}</p>
+    
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <p>{{ form.tipo_documento.label_tag }} {{ form.tipo_documento }}</p>
+      <p>
+        {{ form.documento.label_tag }} {{ form.documento }}
+        {% if view.object %}
+          <br><small style="color: #28a745;">Cadastrado como: {{ view.object.documento_mascarado }}</small>
+        {% endif %}
+      </p>
+    </div>
+    <p>{{ form.faz_parte_cooperativa }} {{ form.faz_parte_cooperativa.label_tag }}</p>
+  </fieldset>
+
+  <fieldset style="border:1px solid #eee;border-radius:8px;padding:12px 14px;margin-bottom:14px;">
+    <legend>Contato</legend>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <p>{{ form.email.label_tag }} {{ form.email }}</p>
+      <p>{{ form.telefone.label_tag }} {{ form.telefone }}</p>
+    </div>
+    <p>{{ form.endereco.label_tag }} {{ form.endereco }}</p>
+  </fieldset>
+
+  <fieldset style="border:1px solid #eee;border-radius:8px;padding:12px 14px;margin-bottom:14px;">
+    <legend>Foto</legend>
+    <p>{{ form.foto.label_tag }} {{ form.foto }}</p>
+    {% if view.object and view.object.foto %}
+      <img src="{{ view.object.foto.url }}" alt="Foto atual" style="height:80px;border-radius:8px;margin-top:6px;">
+    {% endif %}
+  </fieldset>
+
+  <fieldset style="border:1px solid #eee;border-radius:8px;padding:12px 14px;margin-bottom:14px;">
+    <legend>Dados bancários (opcional)</legend>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <p>{{ form.banco.label_tag }} {{ form.banco }}</p>
+      <p>{{ form.tipo_conta.label_tag }} {{ form.tipo_conta }}</p>
+      <p>{{ form.agencia.label_tag }} {{ form.agencia }}</p>
+      <p>{{ form.numero_conta.label_tag }} {{ form.numero_conta }}</p>
+    </div>
+  </fieldset>
+
+  <button type="submit" style="background:#0033a0;color:#fff;padding:8px 12px;border:none;border-radius:6px;">Salvar</button>
+  <a href="{% url 'coletores:list' %}" style="margin-left:8px;">Cancelar</a>
+</form>
+
+{% else %}
+  <p>Acesso negado. Apenas administradores podem gerenciar coletores.</p>
+{% endif %}
+
+{% endblock %}
