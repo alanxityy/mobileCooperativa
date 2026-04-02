@@ -22,11 +22,11 @@ pip install -r requirements.txt
 # Execute as migrações do banco
 python manage.py migrate
 
-# Inicie o servidor
-python manage.py runserver
+# Inicie o servidor 
+python manage.py runserver  ```
 
 
-Instalação - React Native(Expo)
+### Instalação - React Native(Expo)
 
 # 1. Entrar na pasta mobile
 cd mobile
